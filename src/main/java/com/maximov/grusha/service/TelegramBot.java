@@ -1,16 +1,21 @@
 package com.maximov.grusha.service;
 
 import com.maximov.grusha.config.BotConfig;
+import com.maximov.grusha.model.User;
+import com.maximov.grusha.model.UserRepository;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -18,6 +23,8 @@ import java.util.List;
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
 
+    @Autowired
+    private UserRepository userRepository;
     private final BotConfig config;
     private final String HELP_TEXT = "Чтобы забронировать стол нажмите на /start, введите ФИО, номер телефона " +
             "для связи и стол для бронирования";
@@ -57,6 +64,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             switch (messageText){
                 case "/start":
+                    registerUser(update.getMessage());
                     startCommandReceived(chatId, update.getMessage().getChat().getFirstName());
                     break;
                 case "/help":
@@ -69,6 +77,21 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
 
     }
+
+    private void registerUser(Message msg) {
+        if(userRepository.findById(msg.getChatId()).isEmpty()){
+            var chatId = msg.getChatId();
+            var chat = msg.getChat();
+            User user = new User();
+            user.setChatId(chatId);
+            user.setFirstName(chat.getFirstName());
+            user.setLastName(chat.getLastName());
+            user.setUserName(chat.getUserName());
+            user.setRegisteredAt(new Timestamp(System.currentTimeMillis()));
+            userRepository.save(user);
+        }
+    }
+
     private void  startCommandReceived(long chatId, String name){
         String answer = "Привет " + name + " , хотите забронировать стол?";
         log.info("Ответ пользователю {}", name);
