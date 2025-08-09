@@ -12,7 +12,17 @@ public class User {
     private String firstName;
     private String lastName;
     private String userName;
+    private String phoneNumber;
     private Timestamp registeredAt;
+
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
 
     public Long getChatId() {
         return chatId;
@@ -53,4 +63,5 @@ public class User {
     public void setRegisteredAt(Timestamp registeredAt) {
         this.registeredAt = registeredAt;
     }
+
 }
