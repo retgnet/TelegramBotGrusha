@@ -2,66 +2,38 @@ package com.maximov.grusha.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Entity(name = "usersDataTable")
 public class User {
-    @Id
+
+    @Id @Getter @Setter
     private Long chatId;
+    @Getter @Setter
     private String firstName;
+    @Getter @Setter
     private String lastName;
+    @Getter @Setter
     private String userName;
-    private String phoneNumber;
+    @Getter @Setter
     private Timestamp registeredAt;
+    @Getter @Setter
+    private String phoneNumber;
+    @Getter @Setter
+    private boolean isBooking;
+    @Getter @Setter
+    private Timestamp bookingTime;
 
+    private boolean Booking;
 
-    public String getPhoneNumber() {
-        return phoneNumber;
+    public boolean getBooking() {
+        return Booking;
     }
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
+    public void setBooking(boolean booking) {
+        Booking = booking;
     }
-
-    public Long getChatId() {
-        return chatId;
-    }
-
-    public void setChatId(Long chatId) {
-        this.chatId = chatId;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public String getUserName() {
-        return userName;
-    }
-
-    public void setUserName(String userName) {
-        this.userName = userName;
-    }
-
-    public Timestamp getRegisteredAt() {
-        return registeredAt;
-    }
-
-    public void setRegisteredAt(Timestamp registeredAt) {
-        this.registeredAt = registeredAt;
-    }
-
 }
